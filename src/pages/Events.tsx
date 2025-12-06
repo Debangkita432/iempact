@@ -6,7 +6,7 @@ import { EventsSection } from "@/components/EventsSection";
 import { EventCarousel } from "@/components/EventCarousel";
 import { Footer } from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
-import { Ticket, Sparkles, Music, Drama } from "lucide-react";
+import { Ticket, Sparkles, Music, Palette, Drama } from "lucide-react";
 
 const Marquee = () => {
   return (
@@ -42,7 +42,7 @@ const Events = () => {
         <title>Events | IMPACT 2026 - The Grand Carnival</title>
         <meta
           name="description"
-          content="Step into the Carnival! Explore 50+ spectacular events at IMPACT 2026."
+          content="Step into the Carnival! Explore 50+ spectacular events at IMPACT 2026. From the Battle of Bands to Art Exhibitions. Register now!"
         />
       </Helmet>
 
@@ -50,9 +50,12 @@ const Events = () => {
         ref={containerRef}
         className="relative min-h-screen bg-background text-foreground overflow-x-hidden"
       >
+        {/* Deep background layer */}
         <div className="fixed inset-0 z-0">
           <ThreeBackground />
+          {/* Carnival Vignette Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background pointer-events-none" />
+          {/* Festive Glows */}
           <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-red-500/10 blur-[120px] rounded-full animate-pulse pointer-events-none" />
           <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-yellow-500/10 blur-[120px] rounded-full animate-pulse pointer-events-none" />
         </div>
@@ -60,8 +63,8 @@ const Events = () => {
         <Navbar />
 
         <main className="relative z-10 pt-24 md:pt-32">
-          {/* --- HERO --- */}
-          <div className="container mx-auto px-4 mb-16 text-center relative">
+          {/* Hero Section: The Stage */}
+          <div className="container mx-auto px-4 mb-12 text-center relative">
             <motion.div
               style={{ y, opacity }}
               className="space-y-4 relative z-10"
@@ -69,7 +72,7 @@ const Events = () => {
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
                 className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/30 bg-accent/5 backdrop-blur-md text-accent text-sm font-medium mb-4"
               >
                 <Ticket className="w-4 h-4 rotate-[-10deg]" />
@@ -84,37 +87,59 @@ const Events = () => {
                   CARNIVAL
                 </span>
               </h1>
+
+              <p className="font-poppins text-foreground/60 max-w-xl mx-auto text-lg mt-6">
+                Step right up! Witness the convergence of art, technology, and
+                performance.
+                <span className="text-accent"> 50+ Events</span> awaiting your
+                presence.
+              </p>
+            </motion.div>
+
+            {/* Floating Decorative Elements */}
+            <motion.div
+              animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-0 left-4 md:left-20 text-accent/20 hidden md:block pointer-events-none"
+            >
+              <Drama size={80} />
+            </motion.div>
+            <motion.div
+              animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1,
+              }}
+              className="absolute top-10 right-4 md:right-20 text-secondary/20 hidden md:block pointer-events-none"
+            >
+              <Music size={80} />
             </motion.div>
           </div>
 
-          {/* --- CAROUSEL SECTION --- */}
-          <section className="mb-20">
-            {/* PARENT TITLE for Carousel */}
-            <div className="container mx-auto px-4 mb-8 flex items-center justify-center gap-2 opacity-80">
+          {/* Carousel Section (The Main Attraction) */}
+          <section className="mb-16 md:mb-24">
+            <div className="container mx-auto px-4 mb-6 flex items-center gap-2 opacity-80">
               <Sparkles className="text-yellow-400 w-5 h-5" />
-              <span className="font-bebas text-2xl tracking-wide">
+              <span className="font-bebas text-xl tracking-wide">
                 Featured Attractions
               </span>
-              <Sparkles className="text-yellow-400 w-5 h-5" />
             </div>
-
-            {/* The component (make sure you removed the title inside this file!) */}
             <EventCarousel />
           </section>
 
+          {/* Marquee Separator */}
           <Marquee />
 
-          {/* --- MAIN LIST SECTION --- */}
-          <section className="container mx-auto px-4 pb-20 pt-10">
-            {/* PARENT TITLE for List */}
-            <div className="flex flex-col items-center text-center mb-16">
-              <h2 className="font-bebas text-5xl md:text-6xl text-foreground mb-4">
+          {/* All Events Grid */}
+          <section className="container mx-auto px-4 pb-20">
+            <div className="flex flex-col items-center text-center mb-12">
+              <h2 className="font-bebas text-4xl md:text-5xl text-foreground mb-4">
                 CHOOSE YOUR <span className="text-accent">STAGE</span>
               </h2>
-              <div className="h-1 w-24 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full mb-6" />
+              <div className="h-1 w-24 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full" />
             </div>
-
-            {/* The component (make sure you removed the title inside this file!) */}
             <EventsSection />
           </section>
         </main>
