@@ -1,144 +1,179 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "./ui/button";
-import { Calendar, MapPin, Users } from "lucide-react";
-import impactLogo from "@/assets/impact-logo.jpg";
+import { Calendar, MapPin, ArrowRight, Ticket } from "lucide-react";
+
+/* 🎨 Carnival colors */
+const festColors = [
+  "#FFD34E",
+  "#4DA8FF",
+  "#67D66F",
+  "#FF914D",
+  "#B983FF",
+  "#FF6F91",
+];
+
+/* 🔁 Title loop */
+const TITLES = ["IEMPACT 2026", "MELAVERSE"];
+
+const titleSwap = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: 0.6 } },
+  exit: { opacity: 0, transition: { duration: 0.4 } },
+};
 
 export function HeroSection() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((i) => (i + 1) % TITLES.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <section
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ position: "relative", zIndex: 10 }}
-    >
-      {/* Yellow gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-yellow-300/20 via-yellow-400/30 to-background z-10" />
+    <section className="relative min-h-screen flex items-center justify-center pb-8">
+      <div className="container mx-auto px-4 text-center">
 
-      <div
-        className="container mx-auto px-4 relative z-20"
-        style={{ position: "relative", zIndex: 20, color: "#ffffff" }}
-      >
-        <div className="flex flex-col items-center text-center">
-          {/* Logo */}
+        {/* ================= MAIN TITLE ================= */}
+        <AnimatePresence mode="wait">
           <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative mb-6 md:mb-8"
+            key={TITLES[index]}
+            variants={titleSwap}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="mb-3"
           >
-            <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-yellow-400 shadow-[0_0_50px_#FFD700]">
-              <img
-                src={impactLogo}
-                alt="IMPACT 2026 Logo"
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Yellow Rings */}
-            <div className="absolute inset-0 rounded-full border-2 border-yellow-400/40 animate-spin-slow" />
             <div
-              className="absolute -inset-4 rounded-full border border-yellow-300/30 animate-spin-slow"
-              style={{ animationDirection: "reverse" }}
-            />
-          </motion.div>
-
-          {/* Title */}
-          <motion.h1
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="font-bebas text-5xl sm:text-6xl md:text-8xl lg:text-9xl leading-none mb-4"
-          >
-            <span className="text-yellow-400 drop-shadow-[0_0_10px_#FFD700]">
-              IMPACT
-            </span>
-            <span className="text-yellow-300"> 2026</span>
-          </motion.h1>
-
-          {/* Tagline */}
-          <motion.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="font-poppins text-base sm:text-lg md:text-xl text-yellow-200/90 max-w-2xl mb-6 md:mb-8 px-4"
-          >
-            Where Tradition Meets Innovation. Experience the largest cultural
-            extravaganza that celebrates art, music, dance, and creativity.
-          </motion.p>
-
-          {/* Event Info */}
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 md:mb-10"
-          >
-            <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-yellow-500/20 border border-yellow-400/40">
-              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-300" />
-              <span className="text-xs sm:text-sm font-medium text-yellow-200">
-                March 15-17, 2026
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-yellow-600/20 border border-yellow-500/40">
-              <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-300" />
-              <span className="text-xs sm:text-sm font-medium text-yellow-200">
-                Main Campus Ground
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-yellow-300/20 border border-yellow-300/40">
-              <Users className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-300" />
-              <span className="text-xs sm:text-sm font-medium text-yellow-200">
-                10,000+ Attendees
-              </span>
+              className="
+                flex flex-wrap justify-center gap-2
+                font-samarkan
+                tracking-[-0.04em]
+                text-[6.5rem]
+                sm:text-[8rem]
+                md:text-[10rem]
+                lg:text-[12rem]
+                leading-none
+                select-none
+              "
+            >
+              {TITLES[index].split("").map((char, i) =>
+                char === " " ? (
+                  <span key={i} className="w-6" />
+                ) : (
+                  <motion.span
+                    key={i}
+                    animate={{
+                      y: i % 2 === 0 ? [0, -8, 0] : [0, 8, 0],
+                    }}
+                    transition={{
+                      duration: 3.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    style={{
+                      color: festColors[i % festColors.length],
+                      textShadow: `
+                        -2px -2px 0 rgba(0,0,0,0.55),
+                        2px -2px 0 rgba(0,0,0,0.55),
+                        -2px 2px 0 rgba(0,0,0,0.55),
+                        2px 2px 0 rgba(0,0,0,0.55),
+                        8px 12px 22px rgba(0,0,0,0.6)
+                      `,
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                )
+              )}
             </div>
           </motion.div>
+        </AnimatePresence>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
-            className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4"
-          >
-            <Link to="/register" className="w-full sm:w-auto">
-              <Button
-                variant="hero"
-                size="xl"
-                className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-300 text-black"
-              >
-                Register Now
-              </Button>
-            </Link>
-
-            <Link to="/events" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="xl"
-                className="w-full sm:w-auto border-yellow-400 text-yellow-300 hover:bg-yellow-400 hover:text-black"
-              >
-                Explore Events
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 hidden sm:block"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-yellow-400 flex items-start justify-center p-2"
+        {/* ================= SUBHEADING ================= */}
+        <p
+          className="
+            mx-auto mt-1
+            text-[1.25rem] sm:text-[1.35rem] md:text-[1.45rem]
+            font-bold
+            tracking-tight
+            leading-none
+            text-white/90
+            font-['Playfair_Display']
+            whitespace-nowrap
+          "
         >
-          <div className="w-1 h-2 rounded-full bg-yellow-300" />
-        </motion.div>
-      </motion.div>
+          An escape from the clockwork of days into the living rhythm of the Mela.
+        </p>
+
+        {/* ================= DATE + VENUE ================= */}
+        <div className="flex flex-wrap justify-center gap-4 mt-4 mb-12 md:mb-16">
+          <div className="px-6 py-2.5 rounded-full bg-yellow-300 text-black text-sm flex items-center gap-2 shadow-md border-2 border-yellow-600/60">
+            <Calendar className="w-4 h-4" />
+            January 17–18, 2026
+          </div>
+
+          <div className="px-6 py-2.5 rounded-full bg-white text-black text-sm flex items-center gap-2 shadow-md border-2 border-red-500/50">
+            <MapPin className="w-4 h-4" />
+            Main Campus Ground
+          </div>
+        </div>
+
+        {/* ================= CTA BUTTONS ================= */}
+        <div className="flex flex-col sm:flex-row justify-center gap-6">
+          <Link
+            to="/register"
+            className="
+              relative group flex items-center gap-3
+              bg-[#f59e0b] hover:bg-[#fbbf24]
+              text-amber-950 px-8 py-4
+              font-black uppercase tracking-wider
+              border-2 border-amber-700
+              transition-all transform
+              hover:-translate-y-1
+              shadow-[0_6px_0_#b45309]
+              active:translate-y-0 active:shadow-none
+            "
+            style={{
+              clipPath:
+                "polygon(18px 0, 100% 0, 100% 100%, 18px 100%, 0 50%)",
+            }}
+          >
+            <span className="border-r border-amber-800/30 pr-4">
+              <Ticket size={22} />
+            </span>
+            Register Now
+            <ArrowRight
+              size={20}
+              className="opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all"
+            />
+          </Link>
+
+          <Link
+            to="/events"
+            className="
+              relative group flex items-center gap-3
+              bg-white hover:bg-yellow-100
+              text-red-600 px-8 py-4
+              font-black uppercase tracking-wider
+              border-4 border-red-600
+              transition-all transform
+              hover:-translate-y-1
+              shadow-[0_6px_0_#991b1b]
+              active:translate-y-0 active:shadow-none
+            "
+            style={{
+              clipPath:
+                "polygon(18px 0, 100% 0, 100% 100%, 18px 100%, 0 50%)",
+            }}
+          >
+            Explore Events
+          </Link>
+        </div>
+
+      </div>
     </section>
   );
 }

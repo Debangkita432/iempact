@@ -1,73 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap');
+/* ================= GOOGLE FONTS (MUST BE FIRST) ================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+/* ================= SAMARKAN FONT ================= */
+@font-face {
+  font-family: "Samarkan";
+  src: url("./assets/fonts/samarkan/samarkan (1)/SAMAN___.TTF")
+    format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ================= TAILWIND ================= */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* IMPACT 2026 Fest Color Palette */
-    --background: 0 0% 5%;
-    --foreground: 0 0% 100%;
-
-    --card: 0 62% 15%;
-    --card-foreground: 0 0% 100%;
-
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 100%;
-
-    /* Primary Red - #c62b2b */
-    --primary: 0 65% 47%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Secondary Cyan - #65caff */
-    --secondary: 201 100% 70%;
-    --secondary-foreground: 0 0% 10%;
-
-    /* Muted wood-tone - #8f5c2e */
-    --muted: 27 52% 37%;
-    --muted-foreground: 43 100% 85%;
-
-    /* Accent Yellow - #ffd25a */
-    --accent: 43 100% 68%;
-    --accent-foreground: 0 0% 10%;
-
-    /* Orange - #f78724 */
-    --orange: 28 93% 55%;
-    --orange-foreground: 0 0% 100%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 65% 35%;
-    --input: 0 50% 25%;
-    --ring: 43 100% 68%;
-
-    --radius: 0.75rem;
-
-    /* Custom fest gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(0 65% 47%) 0%, hsl(0 70% 35%) 50%, hsl(0 60% 20%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(43 100% 68%) 0%, hsl(28 93% 55%) 100%);
-    --gradient-cyan: linear-gradient(135deg, hsl(201 100% 70%) 0%, hsl(201 80% 50%) 100%);
-    --gradient-dark: linear-gradient(180deg, hsl(0 0% 5%) 0%, hsl(0 65% 15%) 100%);
-
-    /* Shadows */
-    --shadow-glow-red: 0 0 60px hsl(0 65% 47% / 0.5);
-    --shadow-glow-yellow: 0 0 40px hsl(43 100% 68% / 0.4);
-    --shadow-glow-cyan: 0 0 40px hsl(201 100% 70% / 0.4);
-
-    /* Sidebar vars (required by shadcn) */
-    --sidebar-background: 0 0% 8%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 0 65% 47%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 43 100% 68%;
-    --sidebar-accent-foreground: 0 0% 10%;
-    --sidebar-border: 0 65% 35%;
-    --sidebar-ring: 43 100% 68%;
-  }
-}
-
+/* ================= BASE ================= */
 @layer base {
   * {
     @apply border-border;
@@ -78,258 +27,57 @@
   }
 
   body {
-    @apply bg-background text-foreground font-poppins antialiased;
-    background-color: hsl(0, 0%, 5%) !important;
-    color: hsl(0, 0%, 100%) !important;
+    @apply bg-black text-white font-poppins antialiased;
   }
 
+  /* ❌ DO NOT FORCE HEADING FONTS */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bebas tracking-wider;
+    font-family: inherit;
+    font-weight: inherit;
   }
 }
 
+/* ================= COMPONENTS ================= */
 @layer components {
-  .text-gradient-accent {
-    @apply bg-clip-text text-transparent;
-    background-image: var(--gradient-accent);
+  /* ✅ USE THIS CLASS ONLY */
+  .font-samarkan {
+    font-family: "Samarkan", cursive;
+    letter-spacing: 0.04em;
   }
 
-  .text-gradient-cyan {
-    @apply bg-clip-text text-transparent;
-    background-image: var(--gradient-cyan);
-  }
-
-  .bg-gradient-hero {
-    background: var(--gradient-hero);
-  }
-
-  .bg-gradient-accent {
-    background: var(--gradient-accent);
-  }
-
-  .bg-gradient-dark {
-    background: var(--gradient-dark);
-  }
-
-  .glow-red {
-    box-shadow: var(--shadow-glow-red);
-  }
-
-  .glow-yellow {
-    box-shadow: var(--shadow-glow-yellow);
-  }
-
-  .glow-cyan {
-    box-shadow: var(--shadow-glow-cyan);
-  }
-
-  .folk-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c62b2b' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  .samarkan-3d {
+    text-shadow:
+      2px 2px 0 rgba(0,0,0,0.4),
+      4px 4px 0 rgba(0,0,0,0.35),
+      8px 12px 25px rgba(0,0,0,0.5);
   }
 }
 
+/* ================= ANIMATIONS ================= */
 @layer utilities {
   .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-
-  .animate-spin-slow {
-    animation: spin 20s linear infinite;
-  }
-
-  .animate-carnival-lights {
-    animation: carnival-lights 3s ease-in-out infinite;
-  }
-
-  .animate-float-bounce {
-    animation: float-bounce 4s ease-in-out infinite;
-  }
-
-  .animate-sparkle {
-    animation: sparkle 2s ease-in-out infinite;
-  }
-
-  .animate-shimmer {
-    animation: shimmer 3s linear infinite;
-  }
-
-  .animate-gradient {
-    animation: gradient-shift 8s ease infinite;
-    background-size: 200% 200%;
-  }
-
-  .carnival-pattern {
-    background-image: 
-      radial-gradient(circle at 20px 20px, rgba(255, 210, 90, 0.15) 2px, transparent 0),
-      radial-gradient(circle at 80px 80px, rgba(198, 43, 43, 0.15) 2px, transparent 0);
-    background-size: 100px 100px;
-  }
-
-  .carnival-bg-pattern {
-    background-image: 
-      repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 210, 90, 0.03) 35px, rgba(255, 210, 90, 0.03) 70px),
-      repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(198, 43, 43, 0.03) 35px, rgba(198, 43, 43, 0.03) 70px);
-  }
-
-  .glass-morphism {
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .carnival-glow {
-    box-shadow: 
-      0 0 20px rgba(255, 210, 90, 0.3),
-      0 0 40px rgba(198, 43, 43, 0.2),
-      0 0 60px rgba(101, 202, 255, 0.1);
+    animation: float 5s ease-in-out infinite;
   }
 
   @keyframes float {
     0%, 100% {
-      transform: translateY(0px);
+      transform: translateY(0);
     }
     50% {
-      transform: translateY(-20px);
+      transform: translateY(-10px);
     }
   }
 
-  @keyframes pulse-glow {
-    0%, 100% {
-      opacity: 1;
-      filter: brightness(1);
-      box-shadow: 0 0 20px rgba(255, 210, 90, 0.5);
-    }
-    50% {
-      opacity: 0.9;
-      filter: brightness(1.3);
-      box-shadow: 0 0 40px rgba(255, 210, 90, 0.8);
-    }
+  /* ================= ✅ 3D FLIP CARD FIX ================= */
+  .perspective {
+    perspective: 1200px;
   }
 
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+  .transform-style-preserve-3d {
+    transform-style: preserve-3d;
   }
 
-  @keyframes carnival-lights {
-    0%, 100% {
-      opacity: 0.5;
-      filter: brightness(1) drop-shadow(0 0 5px currentColor);
-    }
-    25% {
-      opacity: 1;
-      filter: brightness(1.5) drop-shadow(0 0 15px currentColor);
-    }
-    50% {
-      opacity: 0.7;
-      filter: brightness(1.2) drop-shadow(0 0 10px currentColor);
-    }
-    75% {
-      opacity: 1;
-      filter: brightness(1.5) drop-shadow(0 0 15px currentColor);
-    }
+  .backface-hidden {
+    backface-visibility: hidden;
   }
-
-  @keyframes float-bounce {
-    0%, 100% {
-      transform: translateY(0px) rotate(0deg);
-    }
-    25% {
-      transform: translateY(-15px) rotate(5deg);
-    }
-    50% {
-      transform: translateY(-25px) rotate(0deg);
-    }
-    75% {
-      transform: translateY(-15px) rotate(-5deg);
-    }
-  }
-
-  @keyframes sparkle {
-    0%, 100% {
-      opacity: 0.3;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-
-  @keyframes gradient-shift {
-    0%, 100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-  }
-
-  /* Carnival decorative borders */
-  .carnival-border {
-    position: relative;
-  }
-
-  .carnival-border::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: inherit;
-    padding: 2px;
-    background: linear-gradient(45deg, #c62b2b, #ffd25a, #65caff, #f78724, #c62b2b);
-    background-size: 300% 300%;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: gradient-shift 3s ease infinite;
-  }
-
-  /* Premium card hover effect */
-  .card-hover {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .card-hover:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 
-      0 20px 40px rgba(0, 0, 0, 0.3),
-      0 0 30px rgba(255, 210, 90, 0.2);
-  }
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.animate-marquee {
-  animation: marquee 20s linear infinite;
-}
-/* Paste this into your src/index.css */
-.swiper-pagination-bullet {
-  background-color: rgba(255, 255, 255, 0.5) !important;
-}
-.swiper-pagination-bullet-active {
-  background-color: #ef4444 !important; /* Change this hex code to your accent color */
-  width: 24px !important;
-  border-radius: 4px !important;
-  transition: all 0.3s ease !important;
 }

@@ -1,105 +1,107 @@
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Users } from "lucide-react";
 
-// Sample data - Replace with your actual events list
+/* ✅ Final event data: Event Name + Subheading only */
 const events = [
   {
     id: 1,
-    title: "Code Warriors",
-    category: "Technical",
-    date: "Day 1",
-    venue: "Lab 201",
+    title: "Westwood",
+    subheading: "Western Solo Singing",
     image:
-      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80",
   },
   {
     id: 2,
-    title: "Dance Duel",
-    category: "Cultural",
-    date: "Day 2",
-    venue: "Main Stage",
+    title: "Raagify",
+    subheading: "Eastern Music",
+    image:
+      "https://images.unsplash.com/photo-1519494080410-f9aa76f1fc1a?auto=format&fit=crop&q=80",
+  },
+  {
+    id: 3,
+    title: "Illusion Jam",
+    subheading: "Battle of Bands",
+    image:
+      "https://images.unsplash.com/photo-1511379938547-9c258acb5a0c?auto=format&fit=crop&q=80",
+  },
+  {
+    id: 4,
+    title: "Eastern Euphoria",
+    subheading: "Eastern Dance",
     image:
       "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&q=80",
   },
   {
-    id: 3,
-    title: "Robo Soccer",
-    category: "Technical",
-    date: "Day 1",
-    venue: "Arena",
+    id: 5,
+    title: "Step Up",
+    subheading: "Western Dance",
     image:
-      "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80",
   },
   {
-    id: 4,
-    title: "Voice of Impact",
-    category: "Music",
-    date: "Day 3",
-    venue: "Auditorium",
+    id: 6,
+    title: "Halla Bol",
+    subheading: "Street Play",
     image:
-      "https://images.unsplash.com/photo-1516280440614-6697288d5d38?auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?auto=format&fit=crop&q=80",
   },
 ];
 
 export function EventsSection() {
   return (
-    <div className="w-full">
-      {/* ❌ HEADER REMOVED FROM HERE */}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <section className="w-full pt-10 pb-14">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {events.map((event, index) => (
           <motion.div
             key={event.id}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 26 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            className="group relative bg-slate-900/50 border border-white/5 rounded-xl overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--accent-rgb),0.1)]"
+            transition={{ delay: index * 0.07, duration: 0.6 }}
+            className="
+              group relative overflow-hidden rounded-2xl
+              bg-black/60
+              border border-white/15
+              transition-all duration-300
+              hover:shadow-[0_0_45px_rgba(255,210,90,0.18)]
+              hover:border-yellow-300/70
+            "
           >
-            {/* Image */}
-            <div className="h-48 overflow-hidden relative">
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
+            {/* IMAGE */}
+            <div className="relative h-48 overflow-hidden">
+              <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 transition-colors z-10" />
               <img
                 src={event.image}
                 alt={event.title}
-                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute top-3 right-3 z-20">
-                <span className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-white rounded border border-white/10">
-                  {event.category}
-                </span>
-              </div>
             </div>
 
-            {/* Content */}
-            <div className="p-5">
-              <h3 className="text-xl font-bebas text-white mb-3 group-hover:text-accent transition-colors">
+            {/* CONTENT */}
+            <div className="p-4 text-center">
+              <h3
+                className="
+                  font-samarkan
+                  text-[1.9rem] md:text-[2.1rem]
+                  text-white mb-1
+                  tracking-wide
+                "
+              >
                 {event.title}
               </h3>
 
-              <div className="space-y-2 text-sm text-slate-400">
-                <div className="flex items-center gap-2">
-                  <Calendar size={14} className="text-accent" />
-                  <span>{event.date}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin size={14} className="text-accent" />
-                  <span>{event.venue}</span>
-                </div>
-              </div>
-
-              <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">
-                  Register soon
-                </span>
-                <button className="text-xs font-bold text-accent uppercase tracking-wider hover:underline">
-                  View Details
-                </button>
-              </div>
+              <p
+                className="
+                  text-[0.7rem]
+                  uppercase tracking-[0.25em]
+                  text-white/70
+                "
+              >
+                {event.subheading}
+              </p>
             </div>
           </motion.div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

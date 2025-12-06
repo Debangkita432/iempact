@@ -1,118 +1,137 @@
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
-import { Sparkles, Music, Palette, Trophy } from 'lucide-react';
+"use client";
 
-const features = [
-  {
-    icon: Music,
-    title: 'Live Performances',
-    description: 'Experience electrifying performances from renowned artists and talented students.',
-    color: 'text-primary',
-  },
-  {
-    icon: Palette,
-    title: 'Cultural Events',
-    description: 'Celebrate diversity through traditional dance, art exhibitions, and cultural showcases.',
-    color: 'text-accent',
-  },
-  {
-    icon: Trophy,
-    title: 'Competitions',
-    description: 'Compete in exciting events and win amazing prizes across various categories.',
-    color: 'text-secondary',
-  },
-  {
-    icon: Sparkles,
-    title: 'Workshops',
-    description: 'Learn from industry experts through interactive workshops and masterclasses.',
-    color: 'text-orange',
-  },
-];
+import { motion } from "framer-motion";
+import { useRef } from "react";
+import { useInView } from "framer-motion";
 
 export function AboutSection() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, {
+    once: true,
+    margin: "-120px",
+  });
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        duration: 0.9,          // ⏩ faster
+        staggerChildren: 0.2,   // ⏩ faster
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const item = {
+    hidden: {
+      opacity: 0,
+      y: 28,                   // ⏩ less travel
+      filter: "blur(6px)",     // ⏩ less blur
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.7,         // ⏩ much faster
+        ease: "easeOut",
+      },
+    },
+  };
 
   return (
-    <section id="about" className="py-24 relative overflow-hidden">
-      {/* Background pattern */}
-      <div className="absolute inset-0 folk-pattern opacity-30" />
-      
-      <div className="container mx-auto px-4 relative z-10" ref={ref}>
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="font-bebas text-5xl md:text-7xl mb-4">
-            <span className="text-gradient-accent">About</span> The Fest
-          </h2>
-          <p className="font-poppins text-foreground/70 max-w-2xl mx-auto text-lg">
-            IMPACT 2026 brings together the best of culture, creativity, and competition 
-            in a three-day celebration that transforms our campus into a vibrant carnival.
-          </p>
-        </motion.div>
+    <section id="about" className="pt-16 pb-28">
+      <motion.div
+        ref={ref}
+        variants={container}
+        initial="hidden"
+        animate={isInView ? "show" : "hidden"}
+        className="container mx-auto px-6"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group"
-            >
-              <div className="relative h-full p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50 hover:border-accent/50 transition-all duration-300 hover:scale-105">
-                {/* Icon */}
-                <div className={`w-14 h-14 rounded-xl bg-background/50 flex items-center justify-center mb-4 ${feature.color}`}>
-                  <feature.icon className="w-7 h-7" />
-                </div>
-                
-                {/* Content */}
-                <h3 className="font-bebas text-2xl mb-2 text-foreground group-hover:text-accent transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="font-poppins text-sm text-foreground/60">
-                  {feature.description}
-                </p>
+          {/* ================= VIDEO HOLDER ================= */}
+          <motion.div
+            variants={item}
+            className="
+              relative max-w-md mx-auto
+              rounded-2xl
+              border border-white/30
+              bg-black/80
+              shadow-[0_20px_60px_rgba(0,0,0,0.7)]
+              overflow-hidden
+            "
+          >
+            <div className="absolute top-4 left-4 flex items-center gap-2 text-xs text-white tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              REC
+            </div>
 
-                {/* Decorative corner */}
-                <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-accent/10 to-transparent transform rotate-45 translate-x-16 -translate-y-16" />
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+            <div className="aspect-[3/4] flex flex-col items-center justify-center text-center px-8">
+              <p className="font-bebas text-4xl tracking-widest text-white mb-2">
+                FLASHBACK
+              </p>
+              <p className="font-bebas text-3xl text-white mb-7">
+                2025
+              </p>
 
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8"
-        >
-          {[
-            { value: '50+', label: 'Events' },
-            { value: '100+', label: 'Colleges' },
-            { value: '₹5L+', label: 'Prize Pool' },
-            { value: '3', label: 'Days' },
-          ].map((stat, index) => (
-            <div key={stat.label} className="text-center">
-              <div className="font-bebas text-5xl md:text-6xl text-gradient-accent mb-2">
-                {stat.value}
-              </div>
-              <div className="font-poppins text-sm text-foreground/60 uppercase tracking-wider">
-                {stat.label}
+              <div className="w-16 h-16 rounded-full border border-white/90 flex items-center justify-center hover:scale-105 transition duration-300">
+                <div className="w-0 h-0 border-l-[14px] border-l-white border-y-[8px] border-y-transparent ml-1" />
               </div>
             </div>
-          ))}
-        </motion.div>
-      </div>
+          </motion.div>
+
+          {/* ================= CONTENT ================= */}
+          <div className="text-white">
+            <motion.h2
+              variants={item}
+              className="
+                font-samarkan
+                text-5xl sm:text-6xl md:text-7xl
+                mb-10
+                tracking-wide
+              "
+            >
+              About IEMPACT
+            </motion.h2>
+
+            <div
+              className="
+                space-y-5
+                text-[1.05rem] sm:text-[1.1rem] md:text-[1.15rem]
+                leading-[1.6]
+                font-semibold
+                text-white/95
+                font-['Georgia']
+              "
+            >
+              <motion.p variants={item}>
+                IEMPACT, the flagship cultural festival of IEM Kolkata,
+                marks its grand 35th edition with a vibrant legacy of
+                talent, creativity, and unforgettable energy.
+              </motion.p>
+
+              <motion.p variants={item}>
+                Attracting over{" "}
+                <span className="text-yellow-300 font-semibold">
+                  15,000+
+                </span>{" "}
+                attendees, the festival presents thrilling competitions,
+                spectacular performances, and a dynamic platform for
+                young voices to shine.
+              </motion.p>
+
+              <motion.p variants={item}>
+                With strong media presence and prestigious brand collaborations,
+                IEMPACT continues to stand tall as one of Eastern India’s
+                most anticipated cultural celebrations.
+              </motion.p>
+            </div>
+          </div>
+
+        </div>
+      </motion.div>
     </section>
   );
 }

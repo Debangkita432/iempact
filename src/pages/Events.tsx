@@ -1,160 +1,325 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+"use client";
+
+import { Helmet } from "react-helmet-async";
+import { useState } from "react";
 import pactBg from "/pact.png";
 import { Navbar } from "@/components/Navbar";
-import { EventsSection } from "@/components/EventsSection";
-import { EventCarousel } from "@/components/EventCarousel";
 import { Footer } from "@/components/Footer";
-import { Helmet } from "react-helmet-async";
-import { Ticket, Sparkles, Music, Palette, Drama } from "lucide-react";
 
-const Marquee = () => {
-  return (
-    <div className="relative flex overflow-hidden py-4 bg-accent/10 border-y border-accent/20 backdrop-blur-sm -rotate-1 my-10 z-20">
-      <div className="animate-marquee whitespace-nowrap flex gap-8">
-        {[...Array(10)].map((_, i) => (
-          <span
-            key={i}
-            className="flex items-center gap-4 text-xl font-bebas tracking-widest text-accent/80"
-          >
-            <span className="text-foreground/40">✦</span> CARNIVAL OF TALENT{" "}
-            <span className="text-foreground/40">✦</span> UNLEASH THE MAGIC
-          </span>
-        ))}
-      </div>
-    </div>
-  );
+type EventType = {
+  title: string;
+  desc: string;
+  rules: string;
 };
 
 const Events = () => {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
+  const [activeCard, setActiveCard] = useState<string | null>(null);
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const toggleCard = (key: string) => {
+    setActiveCard(activeCard === key ? null : key);
+  };
 
   return (
     <>
       <Helmet>
-        <title>Events | IMPACT 2026 - The Grand Carnival</title>
+        <title>Events | IEMPACT 2026</title>
         <meta
           name="description"
-          content="Step into the Carnival! Explore 50+ spectacular events at IMPACT 2026. From the Battle of Bands to Art Exhibitions. Register now!"
+          content="Explore all events of IEMPACT 2026 – music, dance, drama, esports, photography and more."
         />
       </Helmet>
 
-      <div
-        ref={containerRef}
-        className="relative min-h-screen bg-background text-foreground overflow-x-hidden"
-      >
-        <div className="fixed inset-0 z-0">
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              backgroundImage: `url(${pactBg})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              filter: "brightness(0.45)",
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background pointer-events-none" />
-          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-red-500/10 blur-[120px] rounded-full animate-pulse pointer-events-none" />
-          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-yellow-500/10 blur-[120px] rounded-full animate-pulse pointer-events-none" />
-        </div>
+      <div className="relative min-h-screen overflow-x-hidden text-yellow-200">
+        {/* BACKGROUND */}
+        <div
+          className="fixed inset-0 -z-10"
+          style={{
+            backgroundImage: `url(${pactBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "brightness(0.6)",
+          }}
+        />
 
         <Navbar />
 
-        <main className="relative z-10 pt-24 md:pt-32">
-          {/* Hero Section: The Stage */}
-          <div className="container mx-auto px-4 mb-12 text-center relative">
-            <motion.div
-              style={{ y, opacity }}
-              className="space-y-4 relative z-10"
-            >
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/30 bg-accent/5 backdrop-blur-md text-accent text-sm font-medium mb-4"
-              >
-                <Ticket className="w-4 h-4 rotate-[-10deg]" />
-                <span>Admit One: The Grand Spectacle</span>
-              </motion.div>
+        <main className="container mx-auto px-4 pt-28 pb-24">
+          <h1 className="font-samarkan text-5xl md:text-7xl text-center mb-24 text-yellow-300">
+            ALL EVENTS
+          </h1>
 
-              <h1 className="font-bebas text-6xl md:text-8xl lg:text-9xl leading-[0.85] tracking-tight">
-                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50">
-                  THE GRAND
-                </span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-accent via-red-400 to-yellow-400 drop-shadow-[0_0_15px_rgba(255,100,100,0.3)]">
-                  CARNIVAL
-                </span>
-              </h1>
+          {/* ================= MUSIC ================= */}
+          <EventSection
+            title="Music"
+            activeCard={activeCard}
+            toggleCard={toggleCard}
+            events={[
+              {
+                title: "Westwood",
+                desc: "Western Solo Singing",
+                rules:
+                  "Solo vocal competition. One accompanist allowed with guitar or light percussion. Karaoke tracks permitted if submitted earlier. Time limit: 3–4 minutes. No explicit lyrics.",
+              },
+              {
+                title: "Raagify",
+                desc: "Eastern Music",
+                rules:
+                  "Solo eastern vocal event. Classical, semi-classical, devotional, folk and Rabindra Sangeet allowed. Bollywood and western songs not allowed. Time limit: 3–4 minutes.",
+              },
+              {
+                title: "Illusion Jam",
+                desc: "Battle of Bands",
+                rules:
+                  "Bands of 4–7 members. Only live instruments allowed. No backing tracks. Time limit: 10–12 minutes including setup. Vulgar content not allowed.",
+              },
+              {
+                title: "Instrumental Echoes",
+                desc: "Battle of Instruments",
+                rules:
+                  "Solo instrumental event (Indian or Western). Backing track without layering allowed. Time limit: 4 minutes.",
+              },
+              {
+                title: "Voxbox",
+                desc: "Beatbox Battle",
+                rules:
+                  "Knockout battle format. Only vocal sounds allowed. No electronic assistance. Time limits announced during rounds.",
+              },
+            ]}
+          />
 
-              <p className="font-poppins text-foreground/60 max-w-xl mx-auto text-lg mt-6">
-                Step right up! Witness the convergence of art, technology, and
-                performance.
-                <span className="text-accent"> 50+ Events</span> awaiting your
-                presence.
-              </p>
-            </motion.div>
+          {/* ================= DANCE ================= */}
+          <EventSection
+            title="Dance"
+            activeCard={activeCard}
+            toggleCard={toggleCard}
+            events={[
+              {
+                title: "Eastern Euphoria",
+                desc: "Eastern Dance",
+                rules:
+                  "Solo, duo and group performances allowed. Group size: 6–10. Only eastern forms allowed. Time limit: 4–6 minutes.",
+              },
+              {
+                title: "Step Up",
+                desc: "Western Dance",
+                rules:
+                  "Solo, duo or group western styles. Props allowed with prior notice. Dangerous stunts prohibited.",
+              },
+              {
+                title: "Street Dance Battle",
+                desc: "Freestyle Battle",
+                rules:
+                  "One-on-one knockout freestyle battles. Music provided by organisers. Judged on originality and musicality.",
+              },
+            ]}
+          />
 
-            {/* Floating Decorative Elements */}
-            <motion.div
-              animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-0 left-4 md:left-20 text-accent/20 hidden md:block pointer-events-none"
-            >
-              <Drama size={80} />
-            </motion.div>
-            <motion.div
-              animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1,
-              }}
-              className="absolute top-10 right-4 md:right-20 text-secondary/20 hidden md:block pointer-events-none"
-            >
-              <Music size={80} />
-            </motion.div>
-          </div>
+          {/* ================= DRAMA ================= */}
+          <EventSection
+            title="Drama & Theatre"
+            activeCard={activeCard}
+            toggleCard={toggleCard}
+            events={[
+              {
+                title: "Shrutirawngo",
+                desc: "Audio Drama",
+                rules:
+                  "Voice-only drama event. Max team size: 8. No physical acting allowed. Time limit: 8–10 minutes.",
+              },
+              {
+                title: "Halla Bol",
+                desc: "Street Play",
+                rules:
+                  "Open-air performance. Max team size: 20. Live music allowed. Time limit: 10–12 minutes.",
+              },
+              {
+                title: "Stand-Up Comedy",
+                desc: "Solo Comedy Act",
+                rules:
+                  "Solo performance. Content must be original and non-vulgar. Time limit: 4 minutes.",
+              },
+            ]}
+          />
 
-          {/* Carousel Section (The Main Attraction) */}
-          <section className="mb-16 md:mb-24">
-            <div className="container mx-auto px-4 mb-6 flex items-center gap-2 opacity-80">
-              <Sparkles className="text-yellow-400 w-5 h-5" />
-              <span className="font-bebas text-xl tracking-wide">
-                Featured Attractions
-              </span>
-            </div>
-            <EventCarousel />
-          </section>
+          {/* ================= PHOTOGRAPHY ================= */}
+          <EventSection
+            title="Photography & Reels"
+            activeCard={activeCard}
+            toggleCard={toggleCard}
+            events={[
+              {
+                title: "Vision Alchemy",
+                desc: "Photography",
+                rules:
+                  "Photos must be taken within fest premises. DSLR & mobiles allowed. No watermarks.",
+              },
+              {
+                title: "Reel-O-Mania",
+                desc: "Reel Making",
+                rules:
+                  "Vertical reels (30–60 sec). Content must be fest-related. Max 2 submissions.",
+              },
+            ]}
+          />
 
-          {/* Marquee Separator */}
-          <Marquee />
+          {/* ================= GAMES ================= */}
+          <EventSection
+            title="Games & Skill Sports"
+            activeCard={activeCard}
+            toggleCard={toggleCard}
+            events={[
+              {
+                title: "Quizzard",
+                desc: "Quiz Competition",
+                rules:
+                  "Teams of 1–2 participants. Multiple rounds. No mobile phones allowed.",
+              },
+              {
+                title: "Mind Over Moves",
+                desc: "Chess",
+                rules:
+                  "Knockout format. Standard chess rules apply.",
+              },
+              {
+                title: "IEM Panja Arena",
+                desc: "Arm Wrestling",
+                rules:
+                  "Matches by weight category. Safety rules mandatory.",
+              },
+              {
+                title: "Table Tennis",
+                desc: "Singles & Doubles",
+                rules:
+                  "Knockout format. Standard rules apply.",
+              },
+              {
+                title: "8-Ball Pool",
+                desc: "Cue Sports",
+                rules:
+                  "Online 1v1 format. Stable internet required.",
+              },
+            ]}
+          />
 
-          {/* All Events Grid */}
-          <section className="container mx-auto px-4 pb-20">
-            <div className="flex flex-col items-center text-center mb-12">
-              <h2 className="font-bebas text-4xl md:text-5xl text-foreground mb-4">
-                CHOOSE YOUR <span className="text-accent">STAGE</span>
-              </h2>
-              <div className="h-1 w-24 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full" />
-            </div>
-            <EventsSection />
-          </section>
+          {/* ================= ESPORTS ================= */}
+          <EventSection
+            title="E-Sports"
+            activeCard={activeCard}
+            toggleCard={toggleCard}
+            events={[
+              {
+                title: "BGMI",
+                desc: "Battle Royale",
+                rules:
+                  "Squad-based. No emulator allowed. POV recording may be required.",
+              },
+              {
+                title: "Free Fire",
+                desc: "Squad Battles",
+                rules:
+                  "Teams of four. Character skills disabled.",
+              },
+              {
+                title: "E-Football",
+                desc: "Virtual Football",
+                rules:
+                  "Online qualifiers and offline finals.",
+              },
+            ]}
+          />
         </main>
 
         <Footer />
+
+        {/* FLIP STYLES */}
+        <style>{`
+          .flip-card {
+            perspective: 1400px;
+            height: 420px;
+          }
+          .flip-inner {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.9s ease;
+            position: relative;
+          }
+          .flip-hover:hover .flip-inner {
+            transform: rotateY(180deg);
+          }
+          .flip-active {
+            transform: rotateY(180deg);
+          }
+          .flip-front,
+          .flip-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            border-radius: 1.25rem;
+            display: flex;
+            flex-direction: column;
+          }
+          .flip-back {
+            transform: rotateY(180deg);
+          }
+        `}</style>
       </div>
     </>
   );
 };
 
 export default Events;
+
+/* ================= SECTION ================= */
+
+const EventSection = ({
+  title,
+  events,
+  activeCard,
+  toggleCard,
+}: {
+  title: string;
+  events: EventType[];
+  activeCard: string | null;
+  toggleCard: (key: string) => void;
+}) => (
+  <section className="mb-32">
+    <h2 className="font-samarkan text-5xl md:text-6xl text-center mb-16 text-yellow-300">
+      {title}
+    </h2>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+      {events.map((e) => {
+        const isActive = activeCard === e.title;
+
+        return (
+          <div
+            key={e.title}
+            className="flip-card flip-hover cursor-pointer"
+            onClick={() => toggleCard(e.title)}
+          >
+            <div className={`flip-inner ${isActive ? "flip-active" : ""}`}>
+              {/* FRONT */}
+              <div className="flip-front border border-yellow-300/40 bg-yellow-100/10 backdrop-blur-md">
+                <div className="aspect-square bg-yellow-300/5 flex items-center justify-center text-yellow-400/60">
+                  Image 1:1
+                </div>
+                <div className="flex-1 p-6 text-center flex flex-col justify-center">
+                  <h3 className="text-xl font-semibold mb-2 text-yellow-200">
+                    {e.title}
+                  </h3>
+                  <p className="text-sm text-yellow-300/80">{e.desc}</p>
+                </div>
+              </div>
+
+              {/* BACK */}
+              <div className="flip-back border border-yellow-300/40 bg-gradient-to-br from-yellow-100 to-amber-200 p-6 flex items-center justify-center text-center text-sm text-[#7c2d12] font-medium leading-relaxed">
+                {e.rules}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+);
