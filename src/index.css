@@ -1,0 +1,83 @@
+/* ================= GOOGLE FONTS (MUST BE FIRST) ================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ================= SAMARKAN FONT ================= */
+@font-face {
+  font-family: "Samarkan";
+  src: url("./assets/fonts/samarkan/samarkan (1)/SAMAN___.TTF")
+    format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ================= TAILWIND ================= */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================= BASE ================= */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-black text-white font-poppins antialiased;
+  }
+
+  /* ❌ DO NOT FORCE HEADING FONTS */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: inherit;
+    font-weight: inherit;
+  }
+}
+
+/* ================= COMPONENTS ================= */
+@layer components {
+  /* ✅ USE THIS CLASS ONLY */
+  .font-samarkan {
+    font-family: "Samarkan", cursive;
+    letter-spacing: 0.04em;
+  }
+
+  .samarkan-3d {
+    text-shadow:
+      2px 2px 0 rgba(0,0,0,0.4),
+      4px 4px 0 rgba(0,0,0,0.35),
+      8px 12px 25px rgba(0,0,0,0.5);
+  }
+}
+
+/* ================= ANIMATIONS ================= */
+@layer utilities {
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  /* ================= ✅ 3D FLIP CARD FIX ================= */
+  .perspective {
+    perspective: 1200px;
+  }
+
+  .transform-style-preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+}
