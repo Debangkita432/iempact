@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { CheckCircle, Loader2 } from 'lucide-react';
 import { z } from 'zod';
-
+import fareStripes from '/fare-tent.svg'
 const events = [
   'Battle of Bands',
   'Classical Dance',
@@ -114,9 +114,11 @@ const Register = () => {
         <Helmet>
           <title>Registration Successful | IMPACT 2026</title>
         </Helmet>
-        <div className="relative min-h-screen bg-background text-foreground">
+        <div className="relative min-h-screen 
+        bg-background text-foreground">
           <Navbar />
-          <main className="pt-20 min-h-[80vh] flex items-center justify-center">
+          <main className="pt-20 min-h-[80vh] flex 
+          items-center justify-center">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}

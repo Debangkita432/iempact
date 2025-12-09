@@ -38,6 +38,7 @@ const Home = () => {
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
+            filter: "brightness(0.5)",
           }}
         />
 
