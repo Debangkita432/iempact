@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
@@ -49,12 +50,23 @@ const registrationSchema = z.object({
   team_name: z
     .string()
     .trim()
-    .max(100, "Team name must be less than 100 characters")
-    .optional(),
+    .min(1, "Team name is required")
+    .max(100, "Team name must be less than 100 characters"),
   team_size: z
     .number()
     .min(1, "Team size must be at least 1")
     .max(10, "Team size cannot exceed 10"),
+  transaction_uid: z
+    .string()
+    .trim()
+    .min(1, "Transaction ID is required"),
+  payment_screenshot: z
+    .instanceof(File, { message: "Payment screenshot is required" })
+    .refine((file) => file.size <= 5000000, `Max file size is 5MB.`)
+    .refine(
+      (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
+      "Only .jpg, .png, .webp formats are supported."
+    ),
 });
 
 type RegistrationForm = z.infer<typeof registrationSchema>;
@@ -72,6 +84,8 @@ const Register = () => {
     event_name: preselectedEvent,
     team_name: "",
     team_size: 1,
+    transaction_uid: "",
+    payment_screenshot: undefined as unknown as File,
   });
 
   const [errors, setErrors] = useState<
@@ -94,41 +108,89 @@ const Register = () => {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setFormData((prev) => ({ ...prev, payment_screenshot: file }));
+      if (errors.payment_screenshot) {
+        setErrors((prev) => ({ ...prev, payment_screenshot: undefined }));
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submitted. Validating...");
     setIsSubmitting(true);
     setErrors({});
 
     // Validate form data
     const result = registrationSchema.safeParse(formData);
     if (!result.success) {
+      console.log("Validation failed:", result.error.errors);
       const fieldErrors: Partial<Record<keyof RegistrationForm, string>> = {};
       result.error.errors.forEach((err) => {
         const field = err.path[0] as keyof RegistrationForm;
         fieldErrors[field] = err.message;
       });
       setErrors(fieldErrors);
+      
+      // Show error in popup as requested
+      const firstError = Object.values(fieldErrors)[0];
+      toast.error("Form Validation Failed", {
+        description: firstError || "Please check the form for errors.",
+      });
+
       setIsSubmitting(false);
       return;
     }
 
+    console.log("Validation passed. Checking token...");
+
     try {
-      const { error } = await supabase.from("registrations").insert({
-        full_name: formData.full_name.trim(),
-        email: formData.email.trim().toLowerCase(),
-        phone: formData.phone.trim(),
-        college_name: formData.college_name.trim(),
-        event_name: formData.event_name,
-        team_name: formData.team_name?.trim() || null,
-        team_size: formData.team_size,
-      });
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("You must be logged in to register.");
+      }
 
-      if (error) throw error;
+      const submitData = new FormData();
+      submitData.append("teamName", formData.team_name);
+      submitData.append("teamNumber", formData.phone); // Mapping phone to teamNumber as per API understanding
+      submitData.append("transactionUid", formData.transaction_uid);
+      submitData.append("eventName", formData.event_name);
+      submitData.append("paymentScreenshot", formData.payment_screenshot);
+      // Adding extra fields just in case backend needs them or allows them
+      submitData.append("fullName", formData.full_name);
+      submitData.append("email", formData.email);
+      submitData.append("collegeName", formData.college_name);
+      submitData.append("teamSize", formData.team_size.toString());
 
-      setIsSuccess(true);
-      toast.success("Registration successful! See you at IMPACT 2026!");
+      console.log("Submitting to backend:", `${import.meta.env.VITE_LOCAL_BACKENDURL}/registration`);
+      const response = await axios.post(
+        `${import.meta.env.VITE_LOCAL_BACKENDURL}/registration`,
+        submitData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // "Content-Type": "multipart/form-data", // Let axios set this with boundary
+          },
+        }
+      );
+      console.log("Backend response:", response.data);
+
+      if (response.data.success) {
+        setIsSuccess(true);
+        toast.success("Registration successful! See you at IMPACT 2026!");
+      } else {
+        throw new Error(response.data.message || "Registration failed");
+      }
     } catch (error: any) {
-      toast.error(error.message || "Registration failed. Please try again.");
+      console.error("Registration Error:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Registration failed. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -162,8 +224,7 @@ const Register = () => {
                 Complete!
               </h1>
               <p className="font-poppins text-foreground/70 mb-8">
-                Thank you for registering for {formData.event_name}. We've sent
-                a confirmation to {formData.email}.
+                Thanks for your registration. We will shortly verify your payment and send you an email.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button variant="hero" onClick={() => navigate("/events")}>
@@ -172,6 +233,7 @@ const Register = () => {
                 <Button
                   variant="outline"
                   onClick={() => {
+
                     setIsSuccess(false);
                     setFormData({
                       full_name: "",
@@ -181,6 +243,8 @@ const Register = () => {
                       event_name: "",
                       team_name: "",
                       team_size: 1,
+                      transaction_uid: "",
+                      payment_screenshot: undefined as unknown as File,
                     });
                   }}
                 >
@@ -239,15 +303,15 @@ const Register = () => {
                       name="event_name"
                       value={formData.event_name}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 rounded-lg bg-input border font-poppins text-sm focus:border-accent focus:outline-none transition-colors ${
+                      className={`w-full px-4 py-3 rounded-lg bg-black text-white border font-poppins text-sm focus:border-accent focus:outline-none transition-colors ${
                         errors.event_name
                           ? "border-primary"
                           : "border-border/50"
                       }`}
                     >
-                      <option value="">Choose an event...</option>
+                      <option value="" className="bg-black text-white">Choose an event...</option>
                       {events.map((event) => (
-                        <option key={event} value={event}>
+                        <option key={event} value={event} className="bg-black text-white">
                           {event}
                         </option>
                       ))}
@@ -350,15 +414,16 @@ const Register = () => {
                     </div>
                   </div>
 
-                  {/* Team Details (Optional) */}
+
+                  {/* Team Details */}
                   <div className="border-t border-border/30 pt-6">
                     <h3 className="font-bebas text-xl text-foreground/80 mb-4">
-                      Team Details (Optional)
+                      Team Details
                     </h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <label className="block font-poppins text-sm font-medium text-foreground/80 mb-2">
-                          Team Name
+                          Team Name <span className="text-primary">*</span>
                         </label>
                         <input
                           type="text"
@@ -366,12 +431,21 @@ const Register = () => {
                           value={formData.team_name}
                           onChange={handleChange}
                           placeholder="Your team name"
-                          className="w-full px-4 py-3 rounded-lg bg-input border border-border/50 font-poppins text-sm placeholder:text-foreground/40 focus:border-accent focus:outline-none transition-colors"
+                          className={`w-full px-4 py-3 rounded-lg bg-input border font-poppins text-sm placeholder:text-foreground/40 focus:border-accent focus:outline-none transition-colors ${
+                            errors.team_name
+                              ? "border-primary"
+                              : "border-border/50"
+                          }`}
                         />
+                        {errors.team_name && (
+                          <p className="mt-1 text-sm text-primary">
+                            {errors.team_name}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <label className="block font-poppins text-sm font-medium text-foreground/80 mb-2">
-                          Team Size
+                          Team Size <span className="text-primary">*</span>
                         </label>
                         <input
                           type="number"
@@ -382,6 +456,65 @@ const Register = () => {
                           max="10"
                           className="w-full px-4 py-3 rounded-lg bg-input border border-border/50 font-poppins text-sm placeholder:text-foreground/40 focus:border-accent focus:outline-none transition-colors"
                         />
+                         {errors.team_size && (
+                          <p className="mt-1 text-sm text-primary">
+                            {errors.team_size}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Payment Details */}
+                  <div className="border-t border-border/30 pt-6">
+                    <h3 className="font-bebas text-xl text-foreground/80 mb-4">
+                      Payment Details
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block font-poppins text-sm font-medium text-foreground/80 mb-2">
+                          Transaction ID <span className="text-primary">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="transaction_uid"
+                          value={formData.transaction_uid}
+                          onChange={handleChange}
+                          placeholder="Enter Transaction ID (e.g. TXN_...)"
+                          className={`w-full px-4 py-3 rounded-lg bg-input border font-poppins text-sm placeholder:text-foreground/40 focus:border-accent focus:outline-none transition-colors ${
+                            errors.transaction_uid
+                              ? "border-primary"
+                              : "border-border/50"
+                          }`}
+                        />
+                        {errors.transaction_uid && (
+                          <p className="mt-1 text-sm text-primary">
+                            {errors.transaction_uid}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block font-poppins text-sm font-medium text-foreground/80 mb-2">
+                          Payment Screenshot <span className="text-primary">*</span>
+                        </label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          className={`w-full px-4 py-3 rounded-lg bg-input border font-poppins text-sm text-foreground/70 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-accent-foreground hover:file:bg-accent/80 transition-colors ${
+                            errors.payment_screenshot
+                              ? "border-primary"
+                              : "border-border/50"
+                          }`}
+                        />
+                        <p className="mt-1 text-xs text-foreground/50">
+                          Max size: 5MB. Formats: JPG, PNG, WebP
+                        </p>
+                        {errors.payment_screenshot && (
+                          <p className="mt-1 text-sm text-primary">
+                            {errors.payment_screenshot}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

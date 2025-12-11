@@ -9,6 +9,7 @@ const navLinks = [
   { name: "Events", href: "/events" },
   { name: "Schedule", href: "/schedule" },
   { name: "Contact", href: "/contact" },
+  { name: "Profile", href: "/profile" },
 ];
 
 export function Navbar() {

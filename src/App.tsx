@@ -14,6 +14,9 @@ import Contact from "./pages/Contact";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/auth";
+import Profile from "./pages/Profile";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import Loader from "./components/loader";
 
 const queryClient = new QueryClient();
@@ -46,6 +49,12 @@ const App = () => {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/profile" element={<Profile />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

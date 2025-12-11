@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -125,14 +126,15 @@ export default function AuthPage() {
     const checkToken = async () => {
       if(localStorage.getItem("token")){
       try {
-        const response = await fetch(`${import.meta.env.VITE_LOCAL_BACKENDURL}/auth/checkToken`, {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`,
-          },  
-        });
-        const data = await response.json();
-        if (data.valid) {
+        const response = await axios.get(
+          `${import.meta.env.VITE_LOCAL_BACKENDURL}/auth/checkToken`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (response.data.valid) {
           navigate("/register");
         }
       } catch (error) {
@@ -161,26 +163,29 @@ export default function AuthPage() {
       const endpoint = isSignUp ? "/auth/signup" : "/auth/signin";
       const url = `${import.meta.env.VITE_LOCAL_BACKENDURL}${endpoint}`;
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      const response = await axios.post(url, values);
 
-      const data = await response.json();
+      const data = response.data;
 
       if (data.success) {
         toast({
           title: isSignUp ? "Welcome to the Carnival!" : "Welcome Back!",
-          description: isSignUp ? "Your ticket has been printed. Step right in!" : "Good to see you again.",
+          description: isSignUp
+            ? "Your ticket has been printed. Step right in!"
+            : "Good to see you again.",
           className: "bg-primary text-primary-foreground border-gold-500",
         });
         console.log("Success:", data);
-        if(isSignUp){
-        localStorage.setItem("token", data.token);
+        if (isSignUp) {
+          localStorage.setItem("token", data.token);
+        } else if (data.user && data.user.token) {
+           // Handle signin token storage if returned in user object as per API contract
+           localStorage.setItem("token", data.user.token);
+           // Also valid if top level token exists
+        } else if (data.token) {
+           localStorage.setItem("token", data.token);
         }
+        
         navigate("/register");
       } else {
         toast({
@@ -189,11 +194,15 @@ export default function AuthPage() {
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Could not reach the ticket booth (server).";
       toast({
         title: "Connection Error",
-        description: "Could not reach the ticket booth (server).",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
